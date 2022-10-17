@@ -9,17 +9,24 @@
         <a href="{{ obj.url }}">{{ obj.title }}</a>
       </div>
       <div class="card-body">
+        <h4>{{ obj.company }}</h4>
         <p class="card-text">{{ obj.description }}</p>
         <p>
             {{ obj.city.name }} | {{ obj.language.name }} | <small>Date: {{ obj.timestamp|date:"d-m-y" }}</small>
         </p>
       </div>
     </div>
+  {% empty %}
+    <h3 class="">Sorry! Not found!</h3>
   {% endfor %}
+<div class="row">
+  <div class="col-md-6 mx-auto">
     <form method="get" action="">
       <div class="form-group">
         {{ form.as_p }}
       </div>
       <button type="submit" class="btn btn-primary">Find</button>
     </form>
+  </div>
+</div>
 {% endblock %}
