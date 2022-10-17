@@ -2,13 +2,13 @@ import requests
 import codecs
 from bs4 import BeautifulSoup as BS
 from lxml import etree
-from random import randint
+from fake_useragent import UserAgent
 
 
-headers = [
-    {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36' },
-    {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36'}
-]
+__all__ = ("work", "rabota", "dou", "djinni")
+
+user_agent = UserAgent()
+headers = {"User-Agent": user_agent.random}
 
 
 def work(url):
@@ -16,7 +16,7 @@ def work(url):
     errors = []
     domain = "https://www.work.ua"
     url = "https://www.work.ua/ru/jobs-kyiv-python/"
-    resp = requests.get(url, headers=headers[randint(0, 1)])
+    resp = requests.get(url, headers=headers)
     if resp.status_code == 200:
         soup = BS(resp.content, 'html.parser')
         main_div = soup.find("div", attrs={"id": "pjax-job-list"})
@@ -48,7 +48,7 @@ def rabota(url):
     jobs = []
     errors = []
     domain = "https://rabota.ua"
-    resp = requests.get(url, headers=headers[randint(0, 1)])
+    resp = requests.get(url, headers=headers)
     if resp.status_code == 200:
         soup = BS(resp.content, 'html.parser')
         dom = etree.HTML(str(soup))
@@ -80,7 +80,7 @@ def rabota(url):
 def dou(url):
     jobs = []
     errors = []
-    resp = requests.get(url, headers=headers[randint(0, 1)])
+    resp = requests.get(url, headers=headers)
     if resp.status_code == 200:
         soup = BS(resp.content, 'html.parser')
         main_div = soup.find("div", attrs={"id": "vacancyListId"})
@@ -114,7 +114,7 @@ def djinni(url):
     jobs = []
     errors = []
     domain = "https://djinni.co"
-    resp = requests.get(url, headers=headers[randint(0, 1)])
+    resp = requests.get(url, headers=headers)
     if resp.status_code == 200:
         soup = BS(resp.content, 'html.parser')
         main_ul = soup.find("ul", attrs={"class": "list-jobs"})
