@@ -3,7 +3,7 @@ from django.db import models
 
 
 class MyUserManager(BaseUserManager):
-    def create_user(self, email, password=None):
+    def create_user(self, email, password):
         """
         Creates and saves a User with the given email, date of
         birth and password.
@@ -19,7 +19,7 @@ class MyUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, password=None):
+    def create_superuser(self, email, password):
         """
         Creates and saves a superuser with the given email, date of
         birth and password.
