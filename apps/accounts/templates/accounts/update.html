@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-8 mx-auto">
+    <h4 class="my-2">Settings</h4>
+    <form method="post" action=""> {% csrf_token %}
+      <div class="form-group">
+        {{ form.as_p }}
+      </div>
+      <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+    <form method="post" action="{% url 'accounts:delete' %}"> {% csrf_token %}
+      <button type="submit" class="btn btn-danger my-2">Delete</button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
