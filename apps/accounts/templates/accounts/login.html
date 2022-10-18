@@ -1,15 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Login{% endblock %}
 
 {% block content %}
-<div class="row">
-  <div class="col"><h2 class="text-center my-3">Scrapping service</h2></div>
-</div>
+
 <div class="row">
   <div class="col-md-8 mx-auto">
-    <h4 class="my-2">Fill the form for searching</h4>
-    <form method="get" action="{% url 'list' %}">
+    <h4 class="my-2">Login form</h4>
+    <form method="post" action=""> {% csrf_token %}
       <div class="form-group">
         {{ form.as_p }}
       </div>

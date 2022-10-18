@@ -1,6 +1,8 @@
+import asyncio
 import os
 import sys
 from django.db import DatabaseError
+from django.contrib.auth import get_user_model
 
 proj = os.path.dirname(os.path.abspath("manage.py"))
 sys.path.append(proj)
@@ -13,24 +15,58 @@ from apps.scrapper.parsers import *
 from apps.scrapper import models
 
 
+User = get_user_model()
+
+
 parsers = (
-    (work, "https://www.work.ua/ru/jobs-kyiv-python/"),
-    # (rabota, "https://rabota.ua/ua/zapros/python/%D1%83%D0%BA%D1%80%D0%B0%D0%B8%D0%BD%D0%B0djinni"),
-    (dou, "https://jobs.dou.ua/vacancies/?search=python"),
-    (djinni, "https://djinni.co/jobs/?region=UKR&primary_keyword=Python"),
+    (work, "work"),
+    # (rabota, "rabota"),
+    (dou, "dou"),
+    (djinni, "djinni"),
 )
-
-city = models.City.objects.filter(slug="kiev").first()
-language = models.Language.objects.filter(slug="python").first()
-
 jobs, errors = [], []
-for func, url in parsers:
-    j, e = func(url)
-    jobs += j
-    errors += e
+
+
+def get_settings():
+    qs = User.objects.filter(send_email=True).values()
+    settings_list = set((q['city_id'], q['language_id']) for q in qs)
+    return settings_list
+
+
+def get_urls(_settings):
+    qs = models.Url.objects.all().values()
+    url_dict = {(q['city_id'], q['language_id']): q['url_data'] for q in qs}
+    urls = []
+    for pair in _settings:
+        tmp = {}
+        tmp['city'] = pair[0]
+        tmp['language'] = pair[1]
+        tmp['url_data'] = url_dict[pair]
+        urls.append(tmp)
+    return urls
+
+
+async def main(value):
+    func, url, city, language = value
+    job, err = await loop.run_in_executor(None, func, url, city, language)
+    errors.extend(err)
+    jobs.extend(job)
+
+settings = get_settings()
+url_list = get_urls(settings)
+
+
+loop = asyncio.get_event_loop()
+tmp_tasks = [(func, data['url_data'][key], data['city'], data['language'])
+             for data in url_list
+             for func, key in parsers]
+tasks = asyncio.wait([loop.create_task(main(f)) for f in tmp_tasks])
+loop.run_until_complete(tasks)
+loop.close()
+
 
 for job in jobs:
-    v = models.Vacancy(**job, city=city, language=language)
+    v = models.Vacancy(**job)
     try:
         v.save()
     except DatabaseError:

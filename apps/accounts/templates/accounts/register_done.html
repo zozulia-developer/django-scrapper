@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Registration done{% endblock %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-8 mx-auto">
+    <h2 class="my-2">New user registered, {{ new_user.email }} !</h2>
+    <p>Now you can <a href="{% url 'accounts:login' %}">login</a>!</p>
+  </div>
+</div>
+
+{% endblock %}
