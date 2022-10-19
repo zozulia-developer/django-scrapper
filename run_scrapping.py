@@ -1,4 +1,5 @@
 import asyncio
+import datetime
 import os
 import sys
 from django.db import DatabaseError
@@ -38,11 +39,12 @@ def get_urls(_settings):
     url_dict = {(q['city_id'], q['language_id']): q['url_data'] for q in qs}
     urls = []
     for pair in _settings:
-        tmp = {}
-        tmp['city'] = pair[0]
-        tmp['language'] = pair[1]
-        tmp['url_data'] = url_dict[pair]
-        urls.append(tmp)
+        if pair in url_dict:
+            tmp = {}
+            tmp['city'] = pair[0]
+            tmp['language'] = pair[1]
+            tmp['url_data'] = url_dict[pair]
+            urls.append(tmp)
     return urls
 
 
@@ -73,5 +75,15 @@ for job in jobs:
         pass
 
 if errors:
-    er = models.Error(data=errors)
-    er.save()
+    qs = models.Error.objects.filter(timestamp=datetime.date.today())
+    if qs.exists():
+        err = qs.first()
+        data = err.data
+        err.data.update({'errors': errors})
+        err.save()
+    else:
+        er = models.Error(data=f'errors:{errors}')
+        er.save()
+
+ten_days_ago = datetime.date.today() - datetime.timedelta(days=10)
+models.Vacancy.objects.filter(timestamp__lte=ten_days_ago).delete()

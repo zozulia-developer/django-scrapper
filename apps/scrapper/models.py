@@ -63,6 +63,9 @@ class Error(models.Model):
     data = jsonfield.JSONField()
     timestamp = models.DateField(auto_now_add=True)
 
+    def __str__(self):
+        return str(self.timestamp)
+
 
 class Url(models.Model):
     city = models.ForeignKey('City', on_delete=models.CASCADE)
