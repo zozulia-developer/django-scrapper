@@ -3,6 +3,9 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
+
+{% if object_list %}
+<h3 class="my-4 text-center">RESULTS</h3>
   {% for obj in object_list %}
     <div class="card my-3">
       <div class="card-header">
@@ -16,10 +19,7 @@
         </p>
       </div>
     </div>
-  {% empty %}
-    <h3 class="">Sorry! Not found!</h3>
-  {% endfor %}
-{% if object_list %}
+    {% endfor %}
 <div class="row">
   <div class="col">
       <nav aria-label="Page navigation example">
@@ -48,6 +48,8 @@
         </nav>
   </div>
 </div>
+{% else %}
+    <h3 class="">Sorry! There is no results!</h3>
 {% endif %}
 <div class="row">
   <div class="col-md-6 mx-auto">
