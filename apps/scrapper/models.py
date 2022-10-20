@@ -1,6 +1,7 @@
 import jsonfield
 from django.db import models
 from slugify import slugify
+from urllib.parse import urlparse
 
 
 def default_urls():
@@ -57,6 +58,10 @@ class Vacancy(models.Model):
 
     def __str__(self):
         return self.title
+
+    @property
+    def resource(self):
+        return urlparse(str(self.url)).netloc
 
 
 class Error(models.Model):

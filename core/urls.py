@@ -22,6 +22,6 @@ from apps.scrapper import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include(("apps.accounts.urls", "accounts"))),
-    path('', views.home_view, name="home"),
-    path('list/', views.list_view, name="list"),
+    path('', views.HomeView.as_view(), name="home"),
+    path('list/', views.VacanciesList.as_view(), name="list"),
 ]

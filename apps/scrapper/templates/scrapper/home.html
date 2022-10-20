@@ -4,16 +4,20 @@
 
 {% block content %}
 <div class="row">
-  <div class="col"><h2 class="text-center my-3">Scrapping service</h2></div>
+  <div class="col"><h2 class="text-center my-3">Job Scrapping Service</h2></div>
 </div>
 <div class="row">
   <div class="col-md-8 mx-auto">
-    <h4 class="my-2">Fill the form for searching</h4>
+    <p class="mb-5 text-justify">
+      This service is scrapping a lot of vacancies from different job sites. And here you can find what do you want by choosing 'City', 'Language'.
+      If there is no pair what do you need, you can write administrator through contact form at your <a href="{% url 'accounts:update' %}">settings</a> page!
+    </p>
+    <small class="my-2 font-weight-bold">Fill out the form below to find the right vacancies</small>
     <form method="get" action="{% url 'list' %}">
       <div class="form-group">
         {{ form.as_p }}
       </div>
-      <button type="submit" class="btn btn-primary">Find</button>
+      <button type="submit" class="btn btn-primary btn-lg btn-block">Find vacancies</button>
     </form>
   </div>
 </div>

@@ -1,21 +1,41 @@
 {% extends "base.html" %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Scrapping Results{% endblock %}
 
 {% block content %}
 
-{% if object_list %}
-<h3 class="my-4 text-center">RESULTS</h3>
-  {% for obj in object_list %}
+{% if page_obj %}
+    <h3 class="my-4 text-center">SCRAPPING RESULTS</h3>
+    <div class="row my-2">
+      <div class="col mx-auto">
+      <button class="btn btn-success btn-lg btn-block" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+        Show searching form
+      </button>
+        <div class="collapse" id="collapseExample">
+          <div class="card card-body">
+            <form method="get" action="">
+              <div class="form-group">
+            {{ form.as_p }}
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg btn-block">Find</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% for obj in page_obj %}
     <div class="card my-3">
       <div class="card-header">
-        <a href="{{ obj.url }}">{{ obj.title }}</a>
+        <a href="{{ obj.url }}" target="_blank">{{ obj.title }}</a>
       </div>
       <div class="card-body">
         <h4>{{ obj.company }}</h4>
         <p class="card-text">{{ obj.description }}</p>
         <p>
-            {{ obj.city.name }} | {{ obj.language.name }} | <small>Date: {{ obj.timestamp|date:"d-m-y" }}</small>
+            <span class="font-weight-bold">City: </span>{{ obj.city.name }} |
+            <span class="font-weight-bold">Language: </span>{{ obj.language.name }} |
+            <span class="font-weight-bold">Resource: </span><a href="https://{{ obj.resource }}" target="_blank">{{ obj.resource }}</a> |
+            <span class="font-weight-bold">Date: </span>{{ obj.timestamp|date:"d-m-y" }}
         </p>
       </div>
     </div>
@@ -23,22 +43,22 @@
 <div class="row">
   <div class="col">
       <nav aria-label="Page navigation example">
-          <ul class="pagination">
-              {% if object_list.has_previous %}
+          <ul class="pagination justify-content-center">
+              {% if page_obj.has_previous %}
                 <li class="page-item">
                       <a class="page-link" href="?city={{ city }}&language={{ language }}&page=1" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                       </a>
                 </li>
               {% endif %}
-              {% for page in object_list.paginator.page_range %}
-                <li class="page-item {% if page == object_list.number %} active {% endif %}">
+              {% for page in page_obj.paginator.page_range %}
+                <li class="page-item {% if page == page_obj.number %} active {% endif %}">
                     <a class="page-link" href="?city={{ city }}&language={{ language }}&page={{ page }}">{{ page }}</a>
                 </li>
               {% endfor %}
-              {% if object_list.has_next %}
+              {% if page_obj.has_next %}
                 <li class="page-item">
-                  <a class="page-link" href="?city={{ city }}&language={{ language }}&page={{ object_list.next_page_number }}" aria-label="Next">
+                  <a class="page-link" href="?city={{ city }}&language={{ language }}&page={{ page_obj.next_page_number }}" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                     <span class="sr-only">Next</span>
                   </a>
@@ -51,14 +71,5 @@
 {% else %}
     <h3 class="">Sorry! There is no results!</h3>
 {% endif %}
-<div class="row">
-  <div class="col-md-6 mx-auto">
-    <form method="get" action="">
-      <div class="form-group">
-        {{ form.as_p }}
-      </div>
-      <button type="submit" class="btn btn-primary">Find</button>
-    </form>
-  </div>
-</div>
+
 {% endblock %}

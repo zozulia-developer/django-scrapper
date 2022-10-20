@@ -11,19 +11,19 @@
       <div class="form-group">
         {{ form.as_p }}
       </div>
-      <button type="submit" class="btn btn-primary">Save</button>
+      <button type="submit" class="btn btn-primary btn-lg btn-block">Save</button>
     </form>
     <form method="post" action="{% url 'accounts:delete' %}"> {% csrf_token %}
-      <button type="submit" class="btn btn-danger my-2">Delete</button>
+      <button type="submit" class="btn btn-danger my-2 btn-lg btn-block">Delete</button>
     </form>
   </div>
 </div>
 <div class="row my-5">
   <div class="col-md-8 mx-auto">
-    <p class="my-2">If there is no valid (city, language), fill the form for administrator!</p>
+    <p class="my-2">If there are no suitable filters for pair ('City', 'Language'), fill the form for administrator, please!</p>
     <p>
-      <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-        Show the form
+      <button class="btn btn-success btn-lg btn-block" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+        Show form
       </button>
     </p>
     <div class="collapse" id="collapseExample">
@@ -32,12 +32,11 @@
           <div class="form-group">
             {{ contact_form.as_p }}
           </div>
-          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="submit" class="btn btn-primary btn-lg btn-block">Send to administrator</button>
         </form>
       </div>
     </div>
   </div>
 </div>
-
 
 {% endblock %}

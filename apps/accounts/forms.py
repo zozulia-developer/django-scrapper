@@ -74,7 +74,7 @@ class UserUpdateForm(forms.Form):
     send_email = forms.BooleanField(
         required=False,
         widget=forms.CheckboxInput,
-        label="Get newsletter"
+        label="Get newsletter ?"
     )
 
     class Meta:
