@@ -12,7 +12,6 @@ from apps.scrapper.services.parsers import base, constants
 class MainParser:
     jobs: list = field(default_factory=list)
     errors: list = field(default_factory=list)
-    domain: str = field(default_factory=str)
     user_agent: UserAgent = UserAgent()
 
     def get_random_header(self):
@@ -30,7 +29,7 @@ class WorkUaParser(MainParser, base.BaseParser):
             if main_div:
                 div_list = main_div.find_all("div", attrs={"class": "job-link"})
                 for div in div_list:
-                    title = div.find("h2").text.strip()
+                    title = div.find("h2")
                     href = title.a["href"]
                     content = div.p.text.strip()
                     company = 'no name'
@@ -38,7 +37,7 @@ class WorkUaParser(MainParser, base.BaseParser):
                     if logo:
                         company = logo["alt"]
                     self.jobs.append({
-                        "title": title,
+                        "title": title.text.strip(),
                         "url": self.domain + href,
                         "description": content,
                         "company": company,
@@ -62,7 +61,7 @@ class DouParser(MainParser, base.BaseParser):
                 li_list = main_div.find_all("li", attrs={"class": "l-vacancy"})
                 for li in li_list:
                     if '__hot' not in li['class']:
-                        title = li.find("div", attrs={"class": "title"}).text.strip()
+                        title = li.find("div", attrs={"class": "title"})
                         href = title.a["href"]
                         cont = li.find("div", attrs={"class": "sh-info"})
                         content = cont.text.strip()
@@ -71,7 +70,7 @@ class DouParser(MainParser, base.BaseParser):
                         if a:
                             company = a.text
                         self.jobs.append({
-                            "title": title,
+                            "title": title.text.strip(),
                             "url": href,
                             "description": content,
                             "company": company,
@@ -96,7 +95,7 @@ class DjinniParser(MainParser, base.BaseParser):
             if main_ul:
                 li_list = main_ul.find_all("li", attrs={"class": "list-jobs__item"})
                 for li in li_list:
-                    title = li.find("div", attrs={"class": "list-jobs__title"}).text.strip()
+                    title = li.find("div", attrs={"class": "list-jobs__title"})
                     href = title.a["href"]
                     cont = li.find("div", attrs={"class": "list-jobs__description"})
                     content = cont.text.strip()
@@ -105,7 +104,7 @@ class DjinniParser(MainParser, base.BaseParser):
                     if comp:
                         company = comp.text
                     self.jobs.append({
-                        "title": title,
+                        "title": title.text.strip(),
                         "url": self.domain + href,
                         "description": content,
                         "company": company,

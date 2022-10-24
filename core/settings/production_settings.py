@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 import dj_database_url
 from dotenv import load_dotenv
+from celery.schedules import crontab
 
 
 load_dotenv()
@@ -143,3 +144,23 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = os.getenv("EMAIL_PORT")
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+
+# Celery settings
+CELERY_BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = "redis://localhost:6379"
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_IMPORTS = ('apps.scrapper.periodic_tasks',)
+CELERY_BEAT_SCHEDULE = {
+        # Delete vacancies
+        "delete-old-vacancies": {
+            "task": "apps.scrapper.periodic_tasks.delete_old_vacancies",
+            "schedule": crontab(minute="0", hour="8"),
+        },
+        # Run scrapping
+        "run-scrapping": {
+          "task": "apps.scrapper.periodic_tasks.run_scrapping",
+          "schedule": crontab(minute="0", hour="15"),
+        },
+}
