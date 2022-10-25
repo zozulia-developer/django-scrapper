@@ -160,7 +160,17 @@ CELERY_BEAT_SCHEDULE = {
         },
         # Run scrapping
         "run-scrapping": {
-          "task": "apps.scrapper.periodic_tasks.run_scrapping",
-          "schedule": crontab(minute="0", hour="15"),
+            "task": "apps.scrapper.periodic_tasks.run_scrapping",
+            "schedule": crontab(minute="0", hour="15"),
+        },
+        # Send email vacancies
+        "send-email-vacancies": {
+            "task": "apps.scrapper.periodic_tasks.send_email_vacancies",
+            "schedule": crontab(minute="0", hour="16"),
+        },
+        # Send email errors
+        "send-email-errors": {
+            "task": "apps.scrapper.periodic_tasks.send_email_errors_to_admin",
+            "schedule": crontab(minute="0", hour="17"),
         },
 }
